@@ -58,6 +58,7 @@ def cache_features(args: List[Dict[str, Union[List[str], DictConfig]]]) -> List[
         scene_loader=scene_loader,
         feature_builders=agent.get_feature_builders(),
         target_builders=agent.get_target_builders(),
+        MDP_builders=agent.get_MDP_builders(),
         cache_path=cfg.cache_path,
         force_cache_computation=cfg.force_cache_computation,
     )

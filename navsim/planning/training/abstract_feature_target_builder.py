@@ -28,6 +28,26 @@ class AbstractFeatureBuilder:
         """
         pass
 
+class AbstractMDPBuilder:
+    """Abstract class of feature builder for agent training."""
+
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def get_unique_name(self) -> str:
+        """
+        :return: Unique name of created feature.
+        """
+        pass
+
+    @abstractmethod
+    def compute_oar(self, scene: Scene) -> Dict[str, Tensor]:
+        """
+        Computes obs, act and rew from the Scene object, i.e., with access to ground-truth.
+        """
+        pass
+
 
 class AbstractTargetBuilder:
     def __init__(self):

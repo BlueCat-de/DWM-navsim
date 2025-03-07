@@ -9,7 +9,7 @@ import torch
 from tqdm import tqdm
 
 from navsim.common.dataloader import SceneLoader
-from navsim.planning.training.abstract_feature_target_builder import AbstractFeatureBuilder, AbstractTargetBuilder
+from navsim.planning.training.abstract_feature_target_builder import AbstractFeatureBuilder, AbstractTargetBuilder, AbstractMDPBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -138,6 +138,7 @@ class Dataset(torch.utils.data.Dataset):
         scene_loader: SceneLoader,
         feature_builders: List[AbstractFeatureBuilder],
         target_builders: List[AbstractTargetBuilder],
+        MDP_builders: List[AbstractMDPBuilder], 
         cache_path: Optional[str] = None,
         force_cache_computation: bool = False,
     ):
@@ -145,11 +146,12 @@ class Dataset(torch.utils.data.Dataset):
         self._scene_loader = scene_loader
         self._feature_builders = feature_builders
         self._target_builders = target_builders
+        self._MDP_builders = MDP_builders
 
         self._cache_path: Optional[Path] = Path(cache_path) if cache_path else None
         self._force_cache_computation = force_cache_computation
         self._valid_cache_paths: Dict[str, Path] = self._load_valid_caches(
-            self._cache_path, feature_builders, target_builders
+            self._cache_path, feature_builders, target_builders, MDP_builders
         )
 
         if self._cache_path is not None:
@@ -160,6 +162,7 @@ class Dataset(torch.utils.data.Dataset):
         cache_path: Optional[Path],
         feature_builders: List[AbstractFeatureBuilder],
         target_builders: List[AbstractTargetBuilder],
+        MDP_builders: List[AbstractMDPBuilder],
     ) -> Dict[str, Path]:
         """
         Helper method to load valid cache paths.
@@ -175,7 +178,7 @@ class Dataset(torch.utils.data.Dataset):
             for log_path in cache_path.iterdir():
                 for token_path in log_path.iterdir():
                     found_caches: List[bool] = []
-                    for builder in feature_builders + target_builders:
+                    for builder in feature_builders + target_builders + MDP_builders:
                         data_dict_path = token_path / (builder.get_unique_name() + ".gz")
                         found_caches.append(data_dict_path.is_file())
                     if all(found_caches):
@@ -204,6 +207,11 @@ class Dataset(torch.utils.data.Dataset):
         for builder in self._target_builders:
             data_dict_path = token_path / (builder.get_unique_name() + ".gz")
             data_dict = builder.compute_targets(scene)
+            dump_feature_target_to_pickle(data_dict_path, data_dict)
+
+        for builder in self._MDP_builders:
+            data_dict_path = token_path / (builder.get_unique_name() + ".gz")
+            data_dict = builder.compute_oar(scene)
             dump_feature_target_to_pickle(data_dict_path, data_dict)
 
         self._valid_cache_paths[token] = token_path

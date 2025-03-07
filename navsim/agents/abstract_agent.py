@@ -9,6 +9,7 @@ from navsim.common.dataclasses import AgentInput, SensorConfig, Trajectory
 from navsim.planning.training.abstract_feature_target_builder import (
     AbstractFeatureBuilder,
     AbstractTargetBuilder,
+    AbstractMDPBuilder
 )
 
 
@@ -65,6 +66,11 @@ class AbstractAgent(torch.nn.Module, ABC):
         """
         raise NotImplementedError(
             "No target builders. Agent does not support training."
+        )
+
+    def get_MDP_builders(self) -> List[AbstractMDPBuilder]:
+        raise NotImplementedError(
+            "No MDP builders. Agent does not support training."
         )
 
     def compute_trajectory(self, agent_input: AgentInput) -> Trajectory:

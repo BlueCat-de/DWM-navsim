@@ -12,6 +12,7 @@ from navsim.agents.DWM.DWM_config import DWMConfig
 from navsim.agents.DWM.DWM_features import (
     DWMFeatureBuilder,
     DWMTargetBuilder,
+    DWMMDPBuilder
 )
 from navsim.agents.DWM.DWM_loss import DWM_loss
 from navsim.agents.DWM.DWM_model import DWMModel
@@ -19,6 +20,7 @@ from navsim.common.dataclasses import SensorConfig
 from navsim.planning.training.abstract_feature_target_builder import (
     AbstractFeatureBuilder,
     AbstractTargetBuilder,
+    AbstractMDPBuilder
 )
 
 
@@ -81,6 +83,9 @@ class DWMAgent(AbstractAgent):
     def get_feature_builders(self) -> List[AbstractFeatureBuilder]:
         """Inherited, see superclass."""
         return [DWMFeatureBuilder(config=self._config)]
+
+    def get_MDP_builders(self) -> List[AbstractMDPBuilder]:
+        return [DWMMDPBuilder(config=self._config)]
 
     def forward(self, features: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
         """Inherited, see superclass."""

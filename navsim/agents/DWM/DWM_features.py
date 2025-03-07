@@ -21,6 +21,7 @@ from navsim.planning.scenario_builder.navsim_scenario_utils import tracked_objec
 from navsim.planning.training.abstract_feature_target_builder import (
     AbstractFeatureBuilder,
     AbstractTargetBuilder,
+    AbstractMDPBuilder,
 )
 
 
@@ -129,6 +130,42 @@ class DWMFeatureBuilder(AbstractFeatureBuilder):
         features = np.transpose(features, (2, 0, 1)).astype(np.float32)
 
         return torch.tensor(features)
+
+
+class DWMMDPBuilder(AbstractMDPBuilder):
+
+    def __init__(self, config: DWMConfig):
+
+        self._config = config
+
+
+    def get_unique_name(self) -> str:
+        """Inherited, see superclass."""
+        return "MDP"
+
+    def compute_oar(self, scene: Scene):
+        
+        obs = self._compute_obs(scene)
+        act = self._compute_act(scene)
+        rew = self._compute_rew(obs, act)
+        
+        return (obs, act, rew)
+
+    def _compute_obs(self, scene: Scene):
+        obs = []
+        for frame_idx in len(scene.frames):
+            frame = scene.frames[frame_idx]
+
+
+        return obs 
+    
+    def _compute_act(self, scene: Scene):
+        act = None
+        return act 
+
+    def _compute_rew(self, obs, act):
+        rew = None
+        return rew
 
 
 class DWMTargetBuilder(AbstractTargetBuilder):
