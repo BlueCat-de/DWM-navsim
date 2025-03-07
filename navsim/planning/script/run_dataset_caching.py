@@ -12,6 +12,12 @@ import pytorch_lightning as pl
 from nuplan.planning.utils.multithreading.worker_pool import WorkerPool
 from nuplan.planning.utils.multithreading.worker_utils import worker_map
 
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
+
+
 from navsim.planning.training.dataset import Dataset
 from navsim.common.dataloader import SceneLoader
 from navsim.common.dataclasses import SceneFilter, SensorConfig
@@ -43,7 +49,6 @@ def cache_features(args: List[Dict[str, Union[List[str], DictConfig]]]) -> List[
     scene_loader = SceneLoader(
         sensor_blobs_path=Path(cfg.sensor_blobs_path),
         data_path=Path(cfg.navsim_log_path),
-        synthetic_scenes_path=Path(cfg.synthetic_scenes_path),
         scene_filter=scene_filter,
         sensor_config=agent.get_sensor_config(),
     )
@@ -70,7 +75,8 @@ def main(cfg: DictConfig) -> None:
 
     logger.info("Building Worker")
     worker: WorkerPool = instantiate(cfg.worker)
-
+    # import ipdb
+    # ipdb.set_trace()
     logger.info("Building SceneLoader")
     scene_filter: SceneFilter = instantiate(cfg.train_test_split.scene_filter)
     data_path = Path(cfg.navsim_log_path)
@@ -78,7 +84,6 @@ def main(cfg: DictConfig) -> None:
     scene_loader = SceneLoader(
         sensor_blobs_path=sensor_blobs_path,
         data_path=data_path,
-        synthetic_scenes_path=Path(cfg.synthetic_scenes_path),
         scene_filter=scene_filter,
         sensor_config=SensorConfig.build_no_sensors(),
     )

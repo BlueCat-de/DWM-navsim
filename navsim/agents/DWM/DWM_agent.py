@@ -68,17 +68,7 @@ class DWMAgent(AbstractAgent):
     def get_sensor_config(self) -> SensorConfig:
         """Inherited, see superclass."""
         use_lidar = not self._config.latent
-        return SensorConfig(
-            cam_f0=[3],
-            cam_l0=[3],
-            cam_l1=False,
-            cam_l2=False,
-            cam_r0=[3],
-            cam_r1=False,
-            cam_r2=False,
-            cam_b0=False,
-            lidar_pc=use_lidar,
-        )
+        return SensorConfig.build_all_sensors()
 
     def get_target_builders(self) -> List[AbstractTargetBuilder]:
         """Inherited, see superclass."""
