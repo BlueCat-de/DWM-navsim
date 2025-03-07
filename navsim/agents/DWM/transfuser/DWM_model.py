@@ -5,17 +5,17 @@ import torch
 import torch.nn as nn
 from nuplan.planning.simulation.trajectory.trajectory_sampling import TrajectorySampling
 
-from navsim.agents.transfuser.transfuser_backbone import TransfuserBackbone
-from navsim.agents.transfuser.transfuser_config import TransfuserConfig
-from navsim.agents.transfuser.transfuser_features import BoundingBox2DIndex
+from navsim.agents.DWM.DWM_backbone import DWMBackbone
+from navsim.agents.DWM.DWM_config import DWMConfig
+from navsim.agents.DWM.DWM_features import BoundingBox2DIndex
 from navsim.common.enums import StateSE2Index
 
 
-class TransfuserModel(nn.Module):
-    """Torch module for Transfuser."""
+class DWMModel(nn.Module):
+    """Torch module for DWM."""
 
     def __init__(
-        self, trajectory_sampling: TrajectorySampling, config: TransfuserConfig
+        self, trajectory_sampling: TrajectorySampling, config: DWMConfig
     ):
         """
         Initializes TransFuser torch module.
@@ -31,7 +31,7 @@ class TransfuserModel(nn.Module):
         ]
 
         self._config = config
-        self._backbone = TransfuserBackbone(config)
+        self._backbone = DWMBackbone(config)
 
         self._keyval_embedding = nn.Embedding(
             8**2 + 1, config.tf_d_model

@@ -7,7 +7,7 @@ from nuplan.common.maps.abstract_map import SemanticMapLayer
 
 
 @dataclass
-class TransfuserConfig:
+class DWMConfig:
     """Global TransFuser config."""
 
     image_architecture: str = "resnet34"

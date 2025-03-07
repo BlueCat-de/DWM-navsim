@@ -4,18 +4,18 @@ from scipy.optimize import linear_sum_assignment
 import torch
 import torch.nn.functional as F
 
-from navsim.agents.transfuser.transfuser_config import TransfuserConfig
-from navsim.agents.transfuser.transfuser_features import BoundingBox2DIndex
+from navsim.agents.DWM.DWM_config import DWMConfig
+from navsim.agents.DWM.DWM_features import BoundingBox2DIndex
 
 
-def transfuser_loss(
-    targets: Dict[str, torch.Tensor], predictions: Dict[str, torch.Tensor], config: TransfuserConfig
+def DWM_loss(
+    targets: Dict[str, torch.Tensor], predictions: Dict[str, torch.Tensor], config: DWMConfig
 ):
     """
-    Helper function calculating complete loss of Transfuser
+    Helper function calculating complete loss of DWM
     :param targets: dictionary of name tensor pairings
     :param predictions: dictionary of name tensor pairings
-    :param config: global Transfuser config
+    :param config: global DWM config
     :return: combined loss value
     """
 
@@ -34,13 +34,13 @@ def transfuser_loss(
 
 
 def _agent_loss(
-    targets: Dict[str, torch.Tensor], predictions: Dict[str, torch.Tensor], config: TransfuserConfig
+    targets: Dict[str, torch.Tensor], predictions: Dict[str, torch.Tensor], config: DWMConfig
 ):
     """
     Hungarian matching loss for agent detection
     :param targets: dictionary of name tensor pairings
     :param predictions: dictionary of name tensor pairings
-    :param config: global Transfuser config
+    :param config: global DWM config
     :return: detection loss
     """
 

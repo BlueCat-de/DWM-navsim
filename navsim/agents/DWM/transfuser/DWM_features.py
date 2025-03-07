@@ -14,7 +14,7 @@ from shapely import affinity
 from shapely.geometry import LineString, Polygon
 from torchvision import transforms
 
-from navsim.agents.transfuser.transfuser_config import TransfuserConfig
+from navsim.agents.DWM.DWM_config import DWMConfig
 from navsim.common.dataclasses import AgentInput, Annotations, Scene
 from navsim.common.enums import BoundingBoxIndex, LidarIndex
 from navsim.planning.scenario_builder.navsim_scenario_utils import tracked_object_types
@@ -24,10 +24,10 @@ from navsim.planning.training.abstract_feature_target_builder import (
 )
 
 
-class TransfuserFeatureBuilder(AbstractFeatureBuilder):
+class DWMFeatureBuilder(AbstractFeatureBuilder):
     """Input feature builder for TransFuser."""
 
-    def __init__(self, config: TransfuserConfig):
+    def __init__(self, config: DWMConfig):
         """
         Initializes feature builder.
         :param config: global config dataclass of TransFuser
@@ -36,7 +36,7 @@ class TransfuserFeatureBuilder(AbstractFeatureBuilder):
 
     def get_unique_name(self) -> str:
         """Inherited, see superclass."""
-        return "transfuser_feature"
+        return "DWM_feature"
 
     def compute_features(self, agent_input: AgentInput) -> Dict[str, torch.Tensor]:
         """Inherited, see superclass."""
@@ -83,7 +83,7 @@ class TransfuserFeatureBuilder(AbstractFeatureBuilder):
 
     def _get_lidar_feature(self, agent_input: AgentInput) -> torch.Tensor:
         """
-        Compute LiDAR feature as 2D histogram, according to Transfuser
+        Compute LiDAR feature as 2D histogram, according to DWM
         :param agent_input: input dataclass
         :return: LiDAR histogram as torch tensors
         """
@@ -131,13 +131,13 @@ class TransfuserFeatureBuilder(AbstractFeatureBuilder):
         return torch.tensor(features)
 
 
-class TransfuserTargetBuilder(AbstractTargetBuilder):
+class DWMTargetBuilder(AbstractTargetBuilder):
     """Output target builder for TransFuser."""
 
     def __init__(
         self,
         trajectory_sampling: TrajectorySampling,
-        config: TransfuserConfig,
+        config: DWMConfig,
     ):
         """
         Initializes target builder.
@@ -149,7 +149,7 @@ class TransfuserTargetBuilder(AbstractTargetBuilder):
 
     def get_unique_name(self) -> str:
         """Inherited, see superclass."""
-        return "transfuser_target"
+        return "DWM_target"
 
     def compute_targets(self, scene: Scene) -> Dict[str, torch.Tensor]:
         """Inherited, see superclass."""
@@ -187,7 +187,7 @@ class TransfuserTargetBuilder(AbstractTargetBuilder):
         max_agents = self._config.num_bounding_boxes
         agent_states_list: List[npt.NDArray[np.float32]] = []
 
-        def _xy_in_lidar(x: float, y: float, config: TransfuserConfig) -> bool:
+        def _xy_in_lidar(x: float, y: float, config: DWMConfig) -> bool:
             return (config.lidar_min_x <= x <= config.lidar_max_x) and (
                 config.lidar_min_y <= y <= config.lidar_max_y
             )
